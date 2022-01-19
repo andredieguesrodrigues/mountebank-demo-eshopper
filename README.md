@@ -4,9 +4,8 @@
 
 This project was developed using a web application (e-commerce) integrated with Mountebank tool to inject behaviour through Javascript to keep and control the state of users between all pages and endpoints during the user flows to contemplate all business flows.
 
-More details can be found in this slideshare presentation.:
+More details can be found in this [presentation](https://drive.google.com/file/d/1kb-uOA37rSwl3gjEeWb1KXtI9jt5ju2r/view?usp=sharing) .
 
-<<>>
 
 ## Requirements
 
