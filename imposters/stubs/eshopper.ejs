@@ -1,0 +1,123 @@
+{
+  "port": 5550,
+  "protocol": "http",
+  "name": "origin",
+  "allowCORS": true,
+  "stubs": [
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "POST",
+            "path": "/login",
+            "query": {
+              "email": "andre@teste.com",
+              "password": "teste"
+            }
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {    config.state.name = 'authorized';    var util = require('util');    return {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'} ,     body: util.format('{\"token\": \"3feedcdeccfa56f536a1e9ddc92275e7e78025640882eb106964622e6d9edf36eaca970a00d27710e7e88c38f54239d1c704c4f993f28358277d0caa53fbc2681c4214c6f1ad02d7ea661dbff4e2dd906afab382f47ee489fdb9b85754538e904674d76e7a7c82ee5137dfeadb094a441da9916f77ce8356f7a23d864d510e43221f9e86d3240b172dd0731faa8045f35bb6185b99af701629b5391c4fe1516936f0fa17e21c01b8eefee6cfb143f00b496c3a332bdbe2ddd534c2301e466eb79d3bce77e11d81ce67eb8ba5c93385798d417dca01a56e015647377cc29ed3403a7a3bd93101f0exea415f100ecab9e0d3544847ec6fe583f00bcd2e026f21292\"}')  };}"
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/shop"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {        var util = require('util');        if(config.state.name == 'authorized' || config.state.name == 'paid')     {               config.state.name = 'logged'; return         {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},                  body: util.format('{  \"products\": [    {      \"id\": 1,      \"description\": \"Blue T-Shirt\",      \"price\": 56    },    {      \"id\": 2,      \"description\": \"Blue Jeans\",      \"price\": 76    },    {      \"id\": 3,      \"description\": \"Simple Girl T-Shirt\",      \"price\": 18    },    {      \"id\": 4,      \"description\": \"Red Dress\",      \"price\": 60    },    {      \"id\": 5,      \"description\": \"Rabbit Fantasy\",      \"price\": 97    },    {      \"id\": 6,      \"description\": \"White Dress\",      \"price\": 66    },    {      \"id\": 7,      \"description\": \"White T-Shirt\",      \"price\": 13    },    {      \"id\": 8,      \"description\": \"Blue Sweatshirt\",      \"price\": 74    },    {      \"id\": 9,      \"description\": \"Black Dress\",      \"price\": 60    },    {      \"id\": 10,      \"description\": \"Black Dress 2\",      \"price\": 33    },    {      \"id\": 11,      \"description\": \"Customized T-Shirt\",      \"price\": 21    },    {      \"id\": 12,      \"description\": \"Long Coat\",      \"price\": 122}]}   ')         }     }    else    return     {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},              body: util.format('{\"message\": \"Access denied\"}')       };}"
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/product_details"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {        var util = require('util');        if(config.state.name == 'logged')     {               config.state.name = 'selected'; return         {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},                  body: util.format('{      \"description\": \"Black Dress\",      \"web_id\": \"1089772\",      \"price\": 60,      \"quantity\": 1,      \"availability\": \"In Stock\",      \"condition\": \"New\",      \"brand\": \"E-SHOPPER\"}')         }     }    else    return     {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},              body: util.format('{\"message\": \"Access denied\"}')       };}"
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/cart"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {        var util = require('util');        if(config.state.name == 'selected')     {               config.state.name = 'added'; return         {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},                  body: util.format('{\"item\" : \"Black Dress\",  \"web_id\" : \"1089772\",          \"price\" : 60,    \"quantity\" : 1,    \"total\" : 69,    \"card_sub_total\" : 60,    \"eco_tax\" : 9,    \"shipping_cost\" : \"Frees\"}')         }     }    else    return     {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},              body: util.format('{\"message\": \"Access denied\"}')       };}"
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/checkout"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {        var util = require('util');        if(config.state.name == 'added')     {               config.state.name = 'at_checkout'; return         {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},                  body: util.format('{ \"user\": { \"register_account\": true,\"guest\": false}, \"shopper_information\": { \"display_name\": \"André Rodrigues\", \"username\": \"andre_teste\", \"password\": \"teste\" }, \"bill_to\": { \"company_name\": \"Farfetch\", \"email\": \"andre@teste.com\", \"title\": \"Black Dress\", \"first_name\": \"André\", \"middle_name\": \"Vinícius\", \"last_name\": \"Rodrigues\", \"address_1\": \"Test Street 123\", \"address_2\": \"Test2 Street 123\", \"postal_code\": \"12345-000\", \"country\": \"Portugal\", \"state\": \"Porto\", \"phone\": \"+351 1234-4321\", \"mobile_phone\": \"+351 9234-4329\", \"fax\": \"12345\", \"notes\": \"Mocked description\", \"shipping-to-bill-address\": false }, \"review_payment\": { \"description\": \"Black Dress\", \"web_id\": \"1089772\", \"price\": 60, \"quantity\": 1, \"total\": 69, \"card_sub_total\": 60, \"exo_tax\": 9, \"shipping_cost\": 0 } }')         }     }    else    return     {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},              body: util.format('{\"message\": \"Access denied\"}')       };}"
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "POST",
+            "path": "/payment",
+            "query": {
+              "number": 4916065162907362,
+              "expiration_date": "08/2022",
+              "cvc": 736,
+              "owner": "ANDRE V D RODRIGUES"
+            }
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {    var util = require('util');       if(config.state.name == 'at_checkout')   { config.state.name = 'paid'; config.state.paid = true; return {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},                 body: util.format('{\"message\": \"Product paid successfully!\"}')         }       }     else         return        {  headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},                      body: util.format('{\"message\": \"Access denied\"}')           };        }"
+        }
+      ]
+    },
+    {
+      "predicates": [
+        {
+          "equals": {
+            "method": "GET",
+            "path": "/sales"
+          }
+        }
+      ],
+      "responses": [
+        {
+          "inject": "function (config) {                var util = require('util');                if(config.state.name == 'at_checkout')           {                        return                         {                     headers:              {                 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'                 },                                           body: util.format('{\"message\": \"Selected Product!\"}')                                        }                                     }               if(config.state.name == 'paid' || config.state.name == 'logged')          {                        return                         {                     headers:              {                 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'                 },                                           body: util.format('{\"message\": \"Sold Product!\"}')                                        }                                     }                                                  else                                                                    return                                                          {                                                            headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},               body: util.format('{\"message\": \"Product not selected for Checkout\"}')                                                                   };}"
+        }
+      ]
+    }
+  ]
+}
